@@ -65,23 +65,35 @@ export const loginEmployee = async (req, res, next) => {
     try {
         const { username, password } = req.body;
 
-        // Tìm kiếm nhân viên theo tên đăng nhập
-        const employee = await Employee.findOne({ username });
+        // Chuyển đổi tên người dùng thành chữ thường
+        const lowercaseUsername = username.toLowerCase();
 
+        // Tìm kiếm nhân viên theo tên đăng nhập
+        const employee = await Employee.findOne({ username: lowercaseUsername });
         // Kiểm tra xem nhân viên có tồn tại hay không
         if (!employee) {
-            return res.status(404).json({ message: 'Tài khoản không tồn tại trong hệ thống.' });
+            return res.status(404).json({
+                status: 404,
+                message: 'Tài khoản không tồn tại trong hệ thống.',
+                data: [],
+                error: null,
+            });
         }
 
         // Kiểm tra mật khẩu
         const isPasswordCorrect = await bcrypt.compare(password, employee.password);
         if (!isPasswordCorrect) {
-            return res.status(400).json({ message: 'Sai tên đăng nhập hoặc mật khẩu.' });
+            return res.status(400).json({
+                status: 400,
+                message: 'Sai tên đăng nhập hoặc mật khẩu.',
+                data: [],
+                error: null,
+            });
         }
 
         // Tạo token
         const token = jwt.sign(
-            { 
+            {
                 id: employee._id,
                 username: employee.username,
                 position: employee.position,
@@ -91,16 +103,20 @@ export const loginEmployee = async (req, res, next) => {
 
         // Gửi token và thông tin nhân viên về client
         return res.status(200).json({
+            status: 200,
             message: 'Đăng nhập thành công.',
-            token,
-            employee: {
-                _id: employee._id,
-                name: employee.name,
-                department: employee.department,
-                salary: employee.salary,
-                hireDate: employee.hireDate,
-                contact: employee.contact
-            }
+            data: {
+                token,
+                employee: {
+                    _id: employee._id,
+                    name: employee.name,
+                    department: employee.department,
+                    salary: employee.salary,
+                    hireDate: employee.hireDate,
+                    contact: employee.contact,
+                },
+            },
+            error: null,
         });
     } catch (error) {
         next(error);
