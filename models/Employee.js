@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
 
 const EmployeeSchema = new mongoose.Schema({
-    id: {
-        type: Boolean,
+    idEmployee: {
+        type: String,
         unique: true,
         required: true,
-
     },
     username: {
         type: String,
@@ -54,4 +53,4 @@ const EmployeeSchema = new mongoose.Schema({
 
 });
 
-export default mongoose.model.Customer || mongoose.model('Employee', EmployeeSchema);
+export default mongoose.model.Employee || mongoose.model('Employee', EmployeeSchema);

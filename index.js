@@ -8,7 +8,8 @@ import routerRoom from "./routers/routerRoom.js"
 import routerTerm from "./routers/routerTerm.js"
 import routerRoomType from "./routers/routerRoomType.js"
 import routerCustomer from "./routers/routerCustomer.js"
-routerTerm
+import routerStatusRoom from "./routers/routerStatusRoom.js"
+import routeEmployee from "./routers/routerEmployee.js"
 dotenv.config()
 
 
@@ -45,11 +46,15 @@ app.use(express.json())
 //sau khi chạy route nếu lỗi thì bắn ra lỗi
 app.use("/api/room",routerRoom)
 
+app.use("/api/status-room",routerStatusRoom)
+
 app.use("/api/term",routerTerm)
 
 app.use("/api/room-type",routerRoomType)
 
 app.use("/api/customer",routerCustomer)
+
+app.use("/api/employee",routeEmployee)
 
 
 

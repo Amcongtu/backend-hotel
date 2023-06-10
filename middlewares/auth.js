@@ -21,7 +21,10 @@ const verifyToken = (req,res,next)=>{
 export const verifyUser = (req,res,next)=>{
     verifyToken(req,res ,()=>{
         if(req.user){
-            next();
+            if(req.user == "admin"){
+                next()
+            }
+            return res.status(403).json({message: "Bạn không phải là admin."})
         }else{
             return res.status(403).json({message:"You are not authorized!"});
         }

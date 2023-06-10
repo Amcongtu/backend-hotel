@@ -1,7 +1,7 @@
 import { body } from 'express-validator';
 import StatusRoom from "../models/StatusRoom.js"
 import Employee from "../models/Employee.js"
-
+import Room from "../models/Room.js"
 export const validateStatusRoom = [
     body('room').notEmpty().withMessage('Phòng không được bỏ trống'),
     body('description').optional().notEmpty().withMessage('Mô tả không được bỏ trống'),
@@ -16,7 +16,7 @@ export const validateStatusRoom = [
 
 export const createStatusRoom = async (req, res, next) => {
     try {
-        const { room, description, customer, employee, unAvailableDates, status } = req.body;
+        const { room, description, customer, employee, startday, endday, status } = req.body;
         // Kiểm tra phòng có tồn tại trong hệ thống
         const existingRoom = await Room.findById(room);
         if (!existingRoom) {
@@ -30,13 +30,23 @@ export const createStatusRoom = async (req, res, next) => {
 
         // Kiểm tra nhân viên có tồn tại trong hệ thống
         const existingEmployee = await Employee.findById(employee);
-        if (!existingEmployee) {
-            return res.status(404).json({
-                status: 404,
-                message: 'Nhân viên không tồn tại trong hệ thống.',
-                success: false,
-                data: [],
-            });
+        // if (!existingEmployee) {
+        //     return res.status(404).json({
+        //         status: 404,
+        //         message: 'Nhân viên không tồn tại trong hệ thống.',
+        //         success: false,
+        //         data: [],
+        //     });
+        // }
+
+        const unAvailableDates = [];
+        const currentDate = new Date(startday);
+        const endDate = new Date(endday);
+
+        while (currentDate <= endDate) {
+            const currentDateCopy = new Date(currentDate);
+            unAvailableDates.push(currentDateCopy);
+            currentDate.setDate(currentDate.getDate() + 1);
         }
 
         // Tạo mới trạng thái phòng
@@ -52,8 +62,8 @@ export const createStatusRoom = async (req, res, next) => {
         // Lưu trạng thái phòng vào cơ sở dữ liệu
         const savedStatusRoom = await newStatusRoom.save();
 
-        res.status(201).json({
-            status: 201,
+        return res.status(200).json({
+            status: 200,
             message: 'Thêm trạng thái phòng thành công.',
             success: true,
             data: savedStatusRoom,
@@ -62,7 +72,6 @@ export const createStatusRoom = async (req, res, next) => {
         next();
     }
 };
-
 
 export const updateStatusRoom = async (req, res, next) => {
     try {

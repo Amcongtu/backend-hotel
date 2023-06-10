@@ -17,7 +17,6 @@ const StatusRoomSchema = new mongoose.Schema({
     employee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
-        required:true,
     },
     unAvailableDates: [
         {

@@ -9,10 +9,10 @@ const router = express.Router()
 // Thêm phòng
 router.post("/",verifyUser,validateRoom,validateMidleware, createRoom)
 
-router.delete("/:id", verifyUser,validateRoom,validateMidleware, deleteRoom)
+router.delete("/:id", verifyUser,validateMidleware, deleteRoom)
 
 
-router.put("/:id", verifyUser,validateRoom,validateMidleware, updateRoom)
+router.put("/:id", verifyUser,validateMidleware, updateRoom)
 
 router.get("/:id", getRoomByRoomNumber)
 
