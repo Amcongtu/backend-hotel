@@ -134,7 +134,7 @@ export const getAllRoomTypes = async (req, res, next) => {
         },
       });
     } catch (error) {
-      next();
+      next(error);
     }
 };
 

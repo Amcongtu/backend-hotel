@@ -1,5 +1,5 @@
 import express  from "express";
-import {createRoom,deleteRoom,getAllRooms,getRoomByRoomNumber,updateRoom,validateRoom} from "../controllers/room.js"
+import {createRoom,deleteRoom,filterRooms,getAllRooms,getRoomByRoomNumber,updateRoom,validateRoom} from "../controllers/room.js"
 import validateMidleware from "../middlewares/validates.js"
 import { verifyUser } from "../middlewares/auth.js";
 
@@ -18,6 +18,7 @@ router.get("/:id", getRoomByRoomNumber)
 
 router.get("/", getAllRooms)
 
+router.get("/filter", filterRooms)
 
 
 

@@ -204,3 +204,36 @@ export const getAllRooms = async (req, res, next) => {
         next(error);
     }
 };
+
+
+export const filterRooms = async (req, res) => {
+    const { startDate, endDate, capacity } = req.query;
+
+    try {
+        let query = {
+            unavailableDates: {
+                $not: {
+                    $elemMatch: {
+                        $gte: new Date(startDate),
+                        $lte: new Date(endDate),
+                    },
+                },
+            },
+        };
+
+        if (capacity) {
+            query = {
+                ...query,
+                capacity: { $gte: parseInt(capacity) },
+            };
+        }
+
+        const filteredRooms = await Room.find(query);
+        const numberFilter = filteredRooms.length;
+
+        return res.json(responseHelper(200, `Đã tìm được ${numberFilter} phòng`, true, filteredRooms));
+    } catch (error) {
+      
+        next(error)
+    }
+};

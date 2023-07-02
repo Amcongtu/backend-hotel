@@ -11,6 +11,13 @@ const RoomSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+
+    // chứa tối da bao nhiêu người
+    capacity: {
+        type: Number,
+        required: true,
+    },
+    
     roomType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'RoomType',
@@ -26,12 +33,15 @@ const RoomSchema = new mongoose.Schema({
     images: {
         type: String,
     },
-    
+
     status: {
         type: String,
         enum: ['draft', 'published'],
         default: 'draft',
-    }
+    },
+    unavailableDates: [{
+        type: Date,
+    }],
 }, { timestamps: true });
 
 // Xuất model để có thể sử dụng ở nơi khác trong ứng dụng
