@@ -21,12 +21,12 @@ const RoomSchema = new mongoose.Schema({
     },
     image_public_id: {
         type: String,
-        required: true,
     },
-    images: [{
-        required: true,
+
+    images: {
         type: String,
-    }],
+    },
+    
     status: {
         type: String,
         enum: ['draft', 'published'],
