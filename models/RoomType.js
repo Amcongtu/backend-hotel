@@ -16,6 +16,12 @@ const RoomTypeSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
+    },  
+
+    status: {
+        type: String,
+        enum: ['draft', 'published'],
+        default: 'draft',
     },
 
     // chứa tối da bao nhiêu người
@@ -23,12 +29,18 @@ const RoomTypeSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    amenities: {
+
+    //tiện nghi
+    utilities: {
         type: [String],
     },
+
+    // diện tích
     area: {
         type: Number,
     },
+
+    
     image: {
         type: String,
         required:true,
@@ -47,4 +59,4 @@ const RoomTypeSchema = new mongoose.Schema({
 
 
 // Xuất model để có thể sử dụng ở nơi khác trong ứng dụng
-export default mongoose.model.RoomType || mongoose.model('RoomType', RoomTypeSchema)
+export default  mongoose.model('RoomType', RoomTypeSchema)

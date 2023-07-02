@@ -2,6 +2,7 @@ import { body } from "express-validator";
 import Employee from "../models/Employee.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import { getPosition } from "../middlewares/auth.js";
 
 export const validateEmployee = [
     body("idEmployee").notEmpty().withMessage("ID nhân viên không được bỏ trống"),
@@ -97,6 +98,11 @@ export const loginEmployee = async (req, res, next) => {
                 id: employee._id,
                 username: employee.username,
                 position: employee.position,
+                name: employee.name,
+                department: employee.department,
+                salary: employee.salary,
+                hireDate: employee.hireDate,
+                contact: employee.contact,
             },
             process.env.JWT_SECRET
         );
@@ -122,3 +128,12 @@ export const loginEmployee = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getPositionEmployee = async(req, res, next)=>{
+    try{
+        getPosition(req,res,next)
+    }
+    catch (error) {
+        next(error);
+    }
+}

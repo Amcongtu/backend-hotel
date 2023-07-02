@@ -7,7 +7,7 @@ const router = express.Router()
 
 
 // router.post("/",verifyUser,validateRoomType,validateMidleware, createRoomType)
-router.post("/",verifyUser,validateRoomType,validateMidleware, createRoomType)
+router.post("/",validateRoomType,validateMidleware, createRoomType)
 
 router.put("/:id",verifyUser,validateRoomType,validateMidleware, updateRoomType)
 

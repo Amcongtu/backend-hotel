@@ -5,28 +5,32 @@ import RoomType from "../models/RoomType.js"
 export const validateRoomType = [
     body('name').notEmpty().withMessage('Tên loại phòng không được bỏ trống'),
     body('code').notEmpty().withMessage('Mã loại phòng không được bỏ trống'),
+    body('image').notEmpty().withMessage('Hình ảnh loại phòng không được bỏ trống'),
+    body('image_id').notEmpty().withMessage('Hình ảnh loại phòng không được bỏ trống'),
     body('price').notEmpty().withMessage('Giá loại phòng không được bỏ trống').isNumeric().withMessage('Giá loại phòng phải là một số'),
     body('capacity').notEmpty().withMessage('Sức chứa không được bỏ trống').isInt({ min: 1 }).withMessage('Sức chứa phải là một số nguyên dương'),
 ]
 
 export const createRoomType = async (req, res, next) => {
     try {
-        // console.log(123)
         const newRoomType = new RoomType(req.body)
-        
-        const existingRoomType = await RoomType.findOne({ _id:req.body.code });
-        if (existingRoomType) {
-            return res.status(409).json(
-                {
-                    status: 409,
-                    message: "Loại phòng đã tồn tại",
-                    success: false,
-                    data: [],
-                }
-            );
-        }
-
-        const saveRoomType = await newRoomType.save();
+        console.log(newRoomType)
+        const roomType = await RoomType.find({})
+        console.log(roomType)
+        // const existingRoomType = await RoomType.findOne({ _id:req.body.code });
+        // if (existingRoomType) {
+            //     return res.status(409).json(
+                //         {
+                    //             status: 409,
+                    //             message: "Loại phòng đã tồn tại",
+                    //             success: false,
+                    //             data: [],
+                    //         }
+                    //     );
+                    // }
+                    
+                    const saveRoomType = await newRoomType.save();
+                    console.log("123")
         return res.status(200).json({
             status: 200,
             message: "Thêm loại phòng thành công.",
