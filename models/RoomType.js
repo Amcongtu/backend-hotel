@@ -41,14 +41,14 @@ const RoomTypeSchema = new mongoose.Schema({
     },
 
     
-    image: {
+    image: [{
         type: String,
         required:true,
-    },
-    image_id: {
+    }],
+    image_id:  [{
         type: String,
         required:true,
-    },
+    }],
     rooms: [
         {
             type: mongoose.Schema.Types.ObjectId,
