@@ -7,7 +7,9 @@ const router = express.Router()
 
 
 // Thêm phòng
-router.post("/",verifyUser,validateRoom,validateMidleware, createRoom)
+// router.post("/",verifyUser,validateRoom,validateMidleware, createRoom)
+router.get("/filter", filterRooms)
+router.post("/", createRoom)
 
 router.delete("/:id", verifyUser,validateMidleware, deleteRoom)
 
@@ -18,7 +20,6 @@ router.get("/:id", getRoomByRoomNumber)
 
 router.get("/", getAllRooms)
 
-router.get("/filter", filterRooms)
 
 
 

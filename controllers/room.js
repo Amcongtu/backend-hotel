@@ -206,7 +206,7 @@ export const getAllRooms = async (req, res, next) => {
 };
 
 
-export const filterRooms = async (req, res) => {
+export const filterRooms = async (req, res, next) => {
     const { startDate, endDate, capacity } = req.query;
 
     try {
@@ -228,6 +228,8 @@ export const filterRooms = async (req, res) => {
             };
         }
 
+        // const roomFilter = await Room.find({capacity: { $gte: parseInt(capacity) }})
+        // console.log(roomFilter)
         const filteredRooms = await Room.find(query);
         const numberFilter = filteredRooms.length;
 

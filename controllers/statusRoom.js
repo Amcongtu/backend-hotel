@@ -16,7 +16,7 @@ export const validateStatusRoom = [
 
 export const createStatusRoom = async (req, res, next) => {
     try {
-        const { room, description, customer, employee, startday, endday, status } = req.body;
+        const { room, description, employee, startDate, endDate, status } = req.body;
         // Kiểm tra phòng có tồn tại trong hệ thống
         const existingRoom = await Room.findById(room);
         if (!existingRoom) {
@@ -30,33 +30,38 @@ export const createStatusRoom = async (req, res, next) => {
 
         // Kiểm tra nhân viên có tồn tại trong hệ thống
         const existingEmployee = await Employee.findById(employee);
-        // if (!existingEmployee) {
-        //     return res.status(404).json({
-        //         status: 404,
-        //         message: 'Nhân viên không tồn tại trong hệ thống.',
-        //         success: false,
-        //         data: [],
-        //     });
-        // }
+        if (!existingEmployee) {
+            return res.status(404).json({
+                status: 404,
+                message: 'Nhân viên không tồn tại trong hệ thống.',
+                success: false,
+                data: [],
+            });
+        }
 
         const unAvailableDates = [];
-        const currentDate = new Date(startday);
-        const endDate = new Date(endday);
+        const currentDate = new Date(startDate);
+        const endDateLoop = new Date(endDate);
 
-        while (currentDate <= endDate) {
+        while (currentDate <= endDateLoop) {
             const currentDateCopy = new Date(currentDate);
             unAvailableDates.push(currentDateCopy);
             currentDate.setDate(currentDate.getDate() + 1);
         }
 
+
+        // Thêm các ngày không khả dụng vào bảng Room
+        existingRoom.unavailableDates = [...existingRoom.unavailableDates, ...unAvailableDates];
+        await existingRoom.save();
         // Tạo mới trạng thái phòng
         const newStatusRoom = new StatusRoom({
             room,
             description,
-            customer,
             employee,
             unAvailableDates,
             status,
+            startDate,
+            endDate
         });
 
         // Lưu trạng thái phòng vào cơ sở dữ liệu

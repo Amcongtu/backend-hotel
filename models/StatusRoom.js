@@ -10,14 +10,21 @@ const StatusRoomSchema = new mongoose.Schema({
         type: String,
         default: "No destination."
     },
-    customer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Customer',
-    },
     employee: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Employee',
     },
+
+    startDate: {
+        required: true,
+        type: Date,
+    },
+
+    endDate: {
+        required: true,
+        type: Date,
+    },
+
     unAvailableDates: [
         {
             type: Date,

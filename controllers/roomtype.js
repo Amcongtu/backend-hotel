@@ -14,23 +14,22 @@ export const validateRoomType = [
 export const createRoomType = async (req, res, next) => {
     try {
         const newRoomType = new RoomType(req.body)
-        console.log(newRoomType)
-        const roomType = await RoomType.find({})
-        console.log(roomType)
-        // const existingRoomType = await RoomType.findOne({ _id:req.body.code });
-        // if (existingRoomType) {
-            //     return res.status(409).json(
-                //         {
-                    //             status: 409,
-                    //             message: "Loại phòng đã tồn tại",
-                    //             success: false,
-                    //             data: [],
-                    //         }
-                    //     );
-                    // }
+        // const roomType = await RoomType.find({})
+        // console.log(roomType)
+        const existingRoomType = await RoomType.findOne({ _id:req.body.code });
+        if (existingRoomType) {
+                return res.status(409).json(
+                        {
+                                status: 409,
+                                message: "Loại phòng đã tồn tại",
+                                success: false,
+                                data: [],
+                            }
+                        );
+                    }
                     
-                    const saveRoomType = await newRoomType.save();
-                    console.log("123")
+        const saveRoomType = await newRoomType.save();
+
         return res.status(200).json({
             status: 200,
             message: "Thêm loại phòng thành công.",

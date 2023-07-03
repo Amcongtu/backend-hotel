@@ -6,8 +6,8 @@ import { verifyUser } from "../middlewares/auth.js";
 const router = express.Router()
 
 
-// router.post("/",verifyUser,validateRoomType,validateMidleware, createRoomType)
-router.post("/",validateRoomType,validateMidleware, createRoomType)
+router.post("/", createRoomType)
+// router.post("/",validateRoomType,validateMidleware, createRoomType)
 
 router.put("/:id",verifyUser,validateRoomType,validateMidleware, updateRoomType)
 
