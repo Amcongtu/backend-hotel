@@ -207,35 +207,77 @@ export const getAllRooms = async (req, res, next) => {
 
 
 export const filterRooms = async (req, res, next) => {
-    const { startDate, endDate, capacity } = req.query;
 
+    const { startDate, endDate, adult, child  } = JSON.parse(req.query.room);
+  
+    var capacity = adult + child
     try {
-        let query = {
-            unavailableDates: {
-                $not: {
-                    $elemMatch: {
-                        $gte: new Date(startDate),
-                        $lte: new Date(endDate),
-                    },
-                },
+      let query = {
+        unavailableDates: {
+          $not: {
+            $elemMatch: {
+              $gte: new Date(startDate),
+              $lte: new Date(endDate),
             },
+          },
+        },
+      };
+  
+      if (capacity) {
+        query = {
+          ...query,
+          capacity: { $gte: parseInt(capacity) },
         };
-
-        if (capacity) {
-            query = {
-                ...query,
-                capacity: { $gte: parseInt(capacity) },
-            };
+      }
+  
+      const filteredRooms = await Room.find(query)
+        .populate({
+          path: 'roomType',
+          select: '-__v -createdAt -updatedAt',
+        })
+        .exec();
+  
+      const roomTypes = {};
+  
+      filteredRooms.forEach(room => {
+        if (!roomTypes[room.roomType._id]) {
+          roomTypes[room.roomType._id] = {
+            _id: room.roomType._id,
+            name: room.roomType.name,
+            code: room.roomType.code,
+            description: room.roomType.description,
+            price: room.roomType.price,
+            status: room.roomType.status,
+            capacity: room.roomType.capacity,
+            utilities: room.roomType.utilities,
+            area: room.roomType.area,
+            image: room.roomType.image,
+            image_id: room.roomType.image_id,
+            rooms: [],
+          };
         }
-
-        // const roomFilter = await Room.find({capacity: { $gte: parseInt(capacity) }})
-        // console.log(roomFilter)
-        const filteredRooms = await Room.find(query);
-        const numberFilter = filteredRooms.length;
-
-        return res.json(responseHelper(200, `Đã tìm được ${numberFilter} phòng`, true, filteredRooms));
+  
+        roomTypes[room.roomType._id].rooms.push({
+          _id: room._id,
+          name: room.name,
+          roomNumber: room.roomNumber,
+          capacity: room.capacity,
+          roomType: room.roomType,
+          description: room.description,
+          image_public_id: room.image_public_id,
+          images: room.images,
+          status: room.status,
+          unavailableDates: room.unavailableDates,
+          createdAt: room.createdAt,
+          updatedAt: room.updatedAt,
+          __v: room.__v,
+        });
+      });
+  
+      const response = Object.values(roomTypes);
+  
+      return res.json(responseHelper(200, `Đã tìm được ${response.length} room type`, true, response));
     } catch (error) {
-      
-        next(error)
+      next(error);
     }
-};
+  };
