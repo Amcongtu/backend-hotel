@@ -1,5 +1,5 @@
-import { responseHelper } from '../helpers/response';
-import Service from '../models/Service';
+import { responseHelper } from '../helpers/response.js';
+import Service from '../models/Service.js';
 
 export const addService = async (req, res, next) => {
     const { name, price, status } = req.body;

@@ -10,6 +10,9 @@ import routerRoomType from "./routers/routerRoomType.js"
 import routerCustomer from "./routers/routerCustomer.js"
 import routerStatusRoom from "./routers/routerStatusRoom.js"
 import routeEmployee from "./routers/routerEmployee.js"
+import routeService from "./routers/routeService.js"
+import routeBooking from "./routers/routeBooking.js"
+
 dotenv.config()
 
 
@@ -55,6 +58,11 @@ app.use("/api/room-type",routerRoomType)
 app.use("/api/customer",routerCustomer)
 
 app.use("/api/employee",routeEmployee)
+
+app.use("/api/service",routeService)
+
+app.use("/api/booking",routeBooking)
+
 
 
 
