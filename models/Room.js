@@ -17,13 +17,19 @@ const RoomSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    
+
+    price: {
+        type: Number,
+        required: true,
+    },  
+
     roomType: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'RoomType',
-        // required: true,
+        required: true,
     },
-    description:{
+    
+    description: {
         type: String,
     },
     image_public_id: {
@@ -33,6 +39,10 @@ const RoomSchema = new mongoose.Schema({
     images: {
         type: String,
     },
+    //tiện nghi
+    utilities: [{
+        type: String,
+    }],
 
     status: {
         type: String,

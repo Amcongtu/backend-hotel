@@ -11,11 +11,19 @@ const BookingSchema = new mongoose.Schema({
         ref: 'Customer',
         required: true,
     },
-    employee: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Employee',
+    name: {
+        type: String,
         required: true,
     },
+    email: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String,
+        required: true,
+    },
+
     checkInDate: {
         type: Date,
         required: true,
@@ -28,9 +36,18 @@ const BookingSchema = new mongoose.Schema({
         service: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Service',
-            required: true,
         },
     }],
+    stage: {
+        type: String,
+        enum: ['waitConfirm', 'confirmed', 'cancelled',  'notPaidFull', 'paid', 'checkedIn', 'checkedOut'],
+        default: 'waitConfirm',
+    },
+    status:{
+        type: String,
+        enum: ['notPaidFull', 'paid'],
+        default: 'notPaidFull',
+    },
     price: {
         type: Number,
         required: true,

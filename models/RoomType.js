@@ -30,11 +30,13 @@ const RoomTypeSchema = new mongoose.Schema({
         required: true,
     },
 
-    //tiện nghi
-    utilities: {
-        type: [String],
-    },
+    utilities_room: [{
+        type: String,
+    }],
 
+    utilities_bath_room: [{
+        type: String,
+    }],
     // diện tích
     area: {
         type: Number,

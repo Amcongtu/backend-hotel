@@ -176,18 +176,18 @@ export const getRoomByRoomNumber = async (req, res, next) => {
 export const getAllRooms = async (req, res, next) => {
     try {
         const { page, limit } = req.query;
-        const pageNumber = parseInt(page, 10) || 1;
-        const limitNumber = parseInt(limit, 10) || 10;
+        const pageNumber = parseInt(page, 30) || 1;
+        const limitNumber = parseInt(limit, 30) || 30;
         const skip = (pageNumber - 1) * limitNumber;
 
         const totalRooms = await Room.countDocuments();
         const totalPages = Math.ceil(totalRooms / limitNumber);
 
         const rooms = await Room.find()
-            .skip(skip)
-            .limit(limitNumber)
-            .sort({ createdAt: "desc" })
-            .populate("roomType");
+        .skip(skip)
+        .limit(limitNumber)
+        .sort({ createdAt: "desc" })
+        .populate("roomType")
 
         return res.status(200).json({
             status: 200,

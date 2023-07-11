@@ -23,6 +23,15 @@ const CustomerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,
+    default: ""
+  },
+  image_id: {
+    type: String,
+    default: ""
+  },
+  
   gender: {
     type: String,
     enum: ['male', 'female', 'other'],
