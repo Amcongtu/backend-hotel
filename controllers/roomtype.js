@@ -161,3 +161,21 @@ export const getRoomType = async (req, res, next) => {
         next();
     }
 };
+
+
+export const getRoomTypePublish = async (req, res, next) => {
+    try {
+        const roomTypes = await RoomType.find({status: 'published'})
+            .sort({ createdAt: "desc" })
+            .populate('rooms');
+  
+        return res.status(200).json({
+                status: 200,
+                message: 'Lấy danh sách loại phòng thành công',
+                success: true,
+                data: roomTypes,
+        });
+    } catch (error) {
+        next();
+    }
+};

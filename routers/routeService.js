@@ -1,5 +1,5 @@
 import express  from "express";
-import { addService } from "../controllers/service.js"
+import { addService, getAllServices } from "../controllers/service.js"
 
 const router = express.Router()
 
@@ -8,4 +8,5 @@ const router = express.Router()
 router.post("/", addService )
 
 
+router.get("/", getAllServices )
 export default router

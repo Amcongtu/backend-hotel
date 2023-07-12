@@ -16,7 +16,7 @@ export const validateRoom = [
 export const createRoom = async (req, res, next) => {
     try {
         const { roomNumber, roomType } = req.body;
-
+        console.log(req.body)
         const existingRoom = await Room.findOne({ roomNumber });
         if (existingRoom) {
             return res.status(404).json({
