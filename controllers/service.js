@@ -27,3 +27,12 @@ export const getAllServices = async (req, res, next) => {
         next(error);
     }
 };
+
+export const getAllServicesPublish = async (req, res, next) => {
+    try {
+        const services = await Service.find({status:'active'});
+        return res.json(responseHelper(200, 'Danh sách dịch vụ', true, services));
+    } catch (error) {
+        next(error);
+    }
+};
