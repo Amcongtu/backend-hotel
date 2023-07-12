@@ -263,6 +263,7 @@ export const filterRooms = async (req, res, next) => {
           roomNumber: room.roomNumber,
           capacity: room.capacity,
           roomType: room.roomType,
+          price: room.price,
           description: room.description,
           image_public_id: room.image_public_id,
           images: room.images,
