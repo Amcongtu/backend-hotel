@@ -14,7 +14,6 @@ export const validateRoomType = [
 export const createRoomType = async (req, res, next) => {
     try {
         const newRoomType = new RoomType(req.body)
-        console.log(newRoomType)
         // const roomType = await RoomType.find({})
         const existingRoomType = await RoomType.findOne({ code:req.body.code });
         if (existingRoomType) {
@@ -29,7 +28,7 @@ export const createRoomType = async (req, res, next) => {
             }
             
             const saveRoomType = await newRoomType.save();
-            console.log(saveRoomType)
+            console.log("toie" +saveRoomType)
             
         return res.status(200).json({
             status: 200,
