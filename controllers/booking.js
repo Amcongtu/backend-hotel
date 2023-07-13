@@ -52,12 +52,6 @@ export const createBooking = async (req, res, next) => {
     // Lưu booking
     const savedBooking = await booking.save();
 
-    // Cập nhật liên kết trong bảng Room
-    await Room.updateMany(
-      { _id: { $in: roomIds } },
-      { $push: { bookings: savedBooking._id } }
-    );
-
     return res.status(201).json({
       status: 201,
       message: 'Booking đã được tạo thành công.',
