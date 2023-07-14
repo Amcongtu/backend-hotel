@@ -1,5 +1,5 @@
 import express from "express";
-import { createStatusRoom, updateStatusRoom, validateStatusRoom } from "../controllers/statusRoom.js"
+import { createStatusRoom, getAllStatusRooms, updateStatusRoom, validateStatusRoom } from "../controllers/statusRoom.js"
 import  validateMidleware  from "../middlewares/validates.js"
 
 const router = express.Router()
@@ -10,5 +10,5 @@ const router = express.Router()
 router.post("/", createStatusRoom)
 router.put("/:id",  updateStatusRoom)
 router.delete("/:id" ,createStatusRoom)
-
+router.get("/", getAllStatusRooms)
 export default router

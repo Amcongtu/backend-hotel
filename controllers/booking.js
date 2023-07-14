@@ -1,8 +1,47 @@
 import Booking from '../models/Booking.js';
 import { responseHelper } from '../helpers/response.js';
 import Room from '../models/Room.js';
-import Service from '../models/Service.js';
+import StatusRoom from '../models/StatusRoom.js';
 
+const addStatusRoom = async(payload) =>
+{
+  let startDate = payload.checkInDate
+  let endDate = payload.checkOutDate
+  let room = payload._id
+  let employee = payload.employee
+
+  const unAvailableDates = [];
+  const currentDate = new Date(startDate);
+  const endDateLoop = new Date(endDate);
+
+  const existingRoom = await Room.findById(room);
+  if (!existingRoom) {
+      return res.status(404).json({
+          status: 404,
+          message: 'Phòng không tồn tại trong hệ thống.',
+          success: false,
+          data: [],
+      });
+  }
+
+  while (currentDate <= endDateLoop) {
+      const currentDateCopy = new Date(currentDate);
+      unAvailableDates.push(currentDateCopy);
+      currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  existingRoom.unavailableDates = [...existingRoom.unavailableDates, ...unAvailableDates];
+  await existingRoom.save();
+  // Tạo mới trạng thái phòng
+  const statusRoom = new StatusRoom({
+      room,
+      description: "Thêm từ đặt phòng",
+      employee,
+      startDate,
+      endDate
+  });
+  await statusRoom.save();
+}
 
 export const createBooking = async (req, res, next) => {
   const {
@@ -14,7 +53,11 @@ export const createBooking = async (req, res, next) => {
     additionalServices,
   } = req.body;
 
-  console.log(req.body)
+  if (!employeeId)
+  {
+    employeeId = ""
+  }
+
   try {
     // Kiểm tra xem các phòng có tồn tại và có trạng thái "published" không
     const validRooms = await Room.find({ _id: { $in: room }, status: 'published' });
@@ -49,7 +92,6 @@ export const createBooking = async (req, res, next) => {
           success: false
         });
       }
-      console.log(existingRoom)
       
       var booking = new Booking({
           room: existingRoom._id,
@@ -63,6 +105,8 @@ export const createBooking = async (req, res, next) => {
           price: existingRoom.price
       });
       await booking.save()
+      const data = await addStatusRoom({checkInDate: _room.checkInDate, checkOutDate: _room.checkOutDate, _id: existingRoom._id, employee: employeeId})
+      console.log(data)
     }
     // Kiểm tra xem các dịch vụ bổ sung có tồn tại không
     // const validAdditionalServices = await Service.find({ _id: { $in: additionalServices } });
