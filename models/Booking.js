@@ -39,7 +39,7 @@ const BookingSchema = new mongoose.Schema({
     }],
     stage: {
         type: String,
-        enum: ['waitConfirm', 'confirmed', 'cancelled',  'notPaidFull', 'paid', 'checkedIn', 'checkedOut'],
+        enum: ['waitConfirm', 'confirmed', 'cancelled',  , 'checkedIn', 'checkedOut'],
         default: 'waitConfirm',
     },
     status:{
