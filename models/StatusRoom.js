@@ -25,16 +25,10 @@ const StatusRoomSchema = new mongoose.Schema({
         type: Date,
     },
 
-    unAvailableDates: [
-        {
-            type: Date,
-            required: true,
-        }
-    ],
     status: {
         type: String,
-        enum: ['pending', 'confirmed', 'cancelled',"maintenance"],
-        default: 'pending',
+        enum: ['booked', 'cancelled',"maintenance", "done"],
+        default: 'booked',
     }
 }, { timestamps: true });
 
