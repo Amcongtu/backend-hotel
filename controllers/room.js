@@ -230,7 +230,7 @@ export const filterRooms = async (req, res, next) => {
         };
       }
   
-      const filteredRooms = await Room.find(query)
+      const filteredRooms = await Room.find({...query, status: 'published'})
         .populate({
           path: 'roomType',
           select: '-__v -createdAt -updatedAt',
@@ -264,6 +264,7 @@ export const filterRooms = async (req, res, next) => {
           capacity: room.capacity,
           roomType: room.roomType,
           price: room.price,
+          utilities: room.utilities,
           description: room.description,
           image_public_id: room.image_public_id,
           images: room.images,
