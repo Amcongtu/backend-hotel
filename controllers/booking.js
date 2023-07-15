@@ -64,6 +64,15 @@ const addStatusRoom = async(payload) =>
 }
 
 export const createBooking = async (req, res, next) => {
+  let transporter = nodemailer.createTransport({
+    host:"smtp.gmail.com",
+    port: 587,
+          secure: false, // true for 465, false for other ports
+          auth:{
+            user: "phamminhquan12c1@gmail.com", // generated ethereal user
+            pass: "yeyzouxjuswhwcxu" // generated ethereal password
+          }
+  })
   const {
     room,
     employeeId,
@@ -83,15 +92,7 @@ export const createBooking = async (req, res, next) => {
     // await sgMail.setApiKey("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");
     // let testAccount = await nodemailer.createTestAccount()
 
-    let transporter = nodemailer.createTransport({
-      host:"smtp.gmail.com",
-      port: 587,
-            secure: false, // true for 465, false for other ports
-            auth:{
-              user: "phamminhquan12c1@gmail.com", // generated ethereal user
-              pass: "yeyzouxjuswhwcxu" // generated ethereal password
-            }
-    })
+    
 
 
     // Kiểm tra xem các phòng có tồn tại và có trạng thái "published" không
