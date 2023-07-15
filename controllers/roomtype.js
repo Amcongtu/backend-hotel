@@ -123,7 +123,7 @@ export const getRoomType = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const roomType = await RoomType.findById(id).populate('rooms');
+        const roomType = await RoomType.find({status: 'published', _id: id}).populate('rooms');
         if (!roomType) {
             return res.status(404).json({
                 status: 404,
