@@ -266,7 +266,7 @@ export const filterRooms = async (req, res, next) => {
           utilities: room.utilities,
           description: room.description,
           image_public_id: room.image_public_id,
-          images: room.images,
+          imageS: room.imageS,
           status: room.status,
           unavailableDates: room.unavailableDates,
           createdAt: room.createdAt,

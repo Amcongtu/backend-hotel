@@ -32,13 +32,13 @@ const RoomSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-    image_public_id: {
+    image_public_id: [{
         type: String,
-    },
+    }],
 
-    images: {
+    images: [{
         type: String,
-    },
+    }],
     //tiện nghi
     utilities: [{
         type: String,
