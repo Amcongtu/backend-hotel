@@ -256,6 +256,7 @@ export const filterRooms = async (req, res, next) => {
             rooms: [],
           };
         }
+        console.log(room)
         roomTypes[room.roomType._id].rooms.push({
           _id: room._id,
           name: room.name,
@@ -266,7 +267,7 @@ export const filterRooms = async (req, res, next) => {
           utilities: room.utilities,
           description: room.description,
           image_public_id: room.image_public_id,
-          imageS: room.imageS,
+          images: room.images,
           status: room.status,
           unavailableDates: room.unavailableDates,
           createdAt: room.createdAt,

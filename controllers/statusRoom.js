@@ -29,15 +29,15 @@ export const createStatusRoom = async (req, res, next) => {
         }
 
         // Kiểm tra nhân viên có tồn tại trong hệ thống
-        const existingEmployee = await Employee.findById(employee);
-        if (!existingEmployee) {
-            return res.status(404).json({
-                status: 404,
-                message: 'Nhân viên không tồn tại trong hệ thống.',
-                success: false,
-                data: [],
-            });
-        }
+        // const existingEmployee = await Employee.findById(employee);
+        // if (!existingEmployee) {
+        //     return res.status(404).json({
+        //         status: 404,
+        //         message: 'Nhân viên không tồn tại trong hệ thống.',
+        //         success: false,
+        //         data: [],
+        //     });
+        // }
 
         const unAvailableDates = [];
         const currentDate = new Date(startDate);

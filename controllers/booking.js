@@ -29,7 +29,6 @@ const addStatusRoom = async(payload) =>
   let startDate = payload.checkInDate
   let endDate = payload.checkOutDate
   let room = payload._id
-  let employee = payload.employee
 
   const unAvailableDates = [];
   const currentDate = new Date(startDate);
@@ -57,7 +56,6 @@ const addStatusRoom = async(payload) =>
   const statusRoom = new StatusRoom({
       room,
       description: "Thêm từ đặt phòng",
-      employee,
       startDate,
       endDate
   });
@@ -142,7 +140,7 @@ export const createBooking = async (req, res, next) => {
           price: existingRoom.price
       });
       await booking.save()
-       await addStatusRoom({checkInDate: _room.checkInDate, checkOutDate: _room.checkOutDate, _id: existingRoom._id, employee: employeeId})
+       await addStatusRoom({checkInDate: _room.checkInDate, checkOutDate: _room.checkOutDate, _id: existingRoom._id})
     }
     // Kiểm tra xem các dịch vụ bổ sung có tồn tại không
     // const validAdditionalServices = await Service.find({ _id: { $in: additionalServices } });
@@ -173,10 +171,10 @@ export const createBooking = async (req, res, next) => {
   } catch (error) {
     await transporter.sendMail(mailConfig(email,"phamminhquan12c1@gmail.com", "ĐẶT PHÒNG THẤT BẠI, TẠI Q&N HOTEL", "ĐẶT PHÒNG KHÔNG THÀNH CÔNG, CHÚNG TÔI SẼ HOÀN TIỀN LẠI CHO BẠN TRONG ÍT PHÚT."))
 
-    return res.status(201).json({
-      status: 201,
+    return res.status(500).json({
+      status: 500,
       message: 'Đặt phòng không thành công, chúng tôi sẽ hoàn tiền cho bạn trước 7 ngày. Cám ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.',
-      success: true,
+      success: false,
       data: []
     });
   }
