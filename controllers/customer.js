@@ -97,3 +97,17 @@ export const loginCustomer = async (req, res, next) => {
     }
 };
 
+export const getAllCustomers = async (req, res, next) => {
+    try {
+      const customers = await Customer.find().select('-password');
+  
+      return res.status(200).json({
+        status: 200,
+        message: 'Lấy danh sách khách hàng thành công.',
+        success: true,
+        data: customers,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };

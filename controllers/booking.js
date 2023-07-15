@@ -41,6 +41,7 @@ const addStatusRoom = async(payload) =>
       endDate
   });
   await statusRoom.save();
+  return 
 }
 
 export const createBooking = async (req, res, next) => {
@@ -145,3 +146,19 @@ export const createBooking = async (req, res, next) => {
 //   ],
 //   "price": 5000000
 // }
+
+
+export const getAllBooking = async (req, res, next) => {
+  try {
+    const bookings = await Booking.find().sort({ createdAt: 'desc' }).populate('room').select('-unavailableDates');
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Lấy danh sách đặt phòng thành công.',
+      success: true,
+      data: bookings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

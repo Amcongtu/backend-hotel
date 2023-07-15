@@ -137,3 +137,20 @@ export const getPositionEmployee = async(req, res, next)=>{
         next(error);
     }
 }
+
+
+
+export const getAllEmployees = async (req, res, next) => {
+    try {
+      const employees = await Employee.find().select('-password');
+  
+      return res.status(200).json({
+        status: 200,
+        message: 'Lấy danh sách nhân viên thành công.',
+        success: true,
+        data: employees,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };

@@ -104,38 +104,20 @@ export const deleteRoomType = async (req, res, next) => {
     }
 };
 
-//Lấy tất cả loại phòng
 export const getAllRoomTypes = async (req, res, next) => {
-    const { page, limit } = req.query;
-    const pageNumber = parseInt(page, 10) || 1;
-    const limitNumber = parseInt(limit, 10) || 10;
-    const skip = (pageNumber - 1) * limitNumber;
-  
     try {
-      const totalRoomTypes = await RoomType.countDocuments();
-      const totalPages = Math.ceil(totalRoomTypes / limitNumber);
-  
-      const roomTypes = await RoomType.find()
-        .skip(skip)
-        .limit(limitNumber)
-        .sort({ createdAt: "desc" })
-        .populate('rooms');
+      const roomTypes = await RoomType.find().sort({ createdAt: 'desc' }).populate('rooms');
   
       return res.status(200).json({
         status: 200,
         message: 'Lấy danh sách loại phòng thành công',
         success: true,
         data: roomTypes,
-        pagination: {
-          currentPage: pageNumber,
-          totalPages: totalPages,
-          totalItems: totalRoomTypes,
-        },
       });
     } catch (error) {
       next(error);
     }
-};
+  };
 
 export const getRoomType = async (req, res, next) => {
     try {
