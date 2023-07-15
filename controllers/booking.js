@@ -1,7 +1,28 @@
 import Booking from '../models/Booking.js';
-import { responseHelper } from '../helpers/response.js';
+// import { responseHelper } from '../helpers/response.js';
 import Room from '../models/Room.js';
 import StatusRoom from '../models/StatusRoom.js';
+// import sgMail from '@sendgrid/mail';
+import nodemailer from "nodemailer"
+
+
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'phamminhquan12c1@gmail.com',
+//     pass: '0763639045'
+//   }
+// });
+
+const mailConfig = (to, from, subject, text, )=>{
+  return {
+    to: to,
+    from: from, // Use the email address or domain you verified above
+    subject: subject,
+    text: text,
+    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+  }
+}
 
 const addStatusRoom = async(payload) =>
 {
@@ -60,6 +81,21 @@ export const createBooking = async (req, res, next) => {
   }
 
   try {
+    // console.log(process.env.SENDGRID_API_KEY)
+    // await sgMail.setApiKey("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");
+    // let testAccount = await nodemailer.createTestAccount()
+
+    let transporter = nodemailer.createTransport({
+      host:"smtp.gmail.com",
+      port: 587,
+            secure: false, // true for 465, false for other ports
+            auth:{
+              user: "phamminhquan12c1@gmail.com", // generated ethereal user
+              pass: "yeyzouxjuswhwcxu" // generated ethereal password
+            }
+    })
+
+
     // Kiểm tra xem các phòng có tồn tại và có trạng thái "published" không
     const validRooms = await Room.find({ _id: { $in: room }, status: 'published' });
     if (validRooms.length !== room.length) {
@@ -106,8 +142,7 @@ export const createBooking = async (req, res, next) => {
           price: existingRoom.price
       });
       await booking.save()
-      const data = await addStatusRoom({checkInDate: _room.checkInDate, checkOutDate: _room.checkOutDate, _id: existingRoom._id, employee: employeeId})
-      console.log(data)
+       await addStatusRoom({checkInDate: _room.checkInDate, checkOutDate: _room.checkOutDate, _id: existingRoom._id, employee: employeeId})
     }
     // Kiểm tra xem các dịch vụ bổ sung có tồn tại không
     // const validAdditionalServices = await Service.find({ _id: { $in: additionalServices } });
@@ -120,15 +155,30 @@ export const createBooking = async (req, res, next) => {
     // }
 
 
-
+    try {
+      //  await sgMail.send(mailConfig("lebaonhi12c!@gmail.com", email, "XÁC NHẬN ĐẶT PHÒNG TẠI Q&N HOTEL", "ĐẶT PHÒNG THÀNH CÔNG"))
+      await transporter.sendMail(mailConfig(email,"phamminhquan12c1@gmail.com", "XÁC NHẬN ĐẶT PHÒNG TẠI Q&N HOTEL", "ĐẶT PHÒNG THÀNH CÔNG"))
+    }
+    catch(error)
+    {
+      await transporter.sendMail(mailConfig(email,"phamminhquan12c1@gmail.com", "XÁC NHẬN ĐẶT PHÒNG TẠI Q&N HOTEL", "ĐẶT PHÒNG KHÔNG THÀNH CÔNG, CHÚNG TÔI SẼ HOÀN TIỀN LẠI CHO BẠN TRONG ÍT PHÚT."))
+    }
+    
     return res.status(201).json({
       status: 201,
-      message: 'Các đặt phòng đã được tạo thành công.',
+      message: 'Các đặt phòng đã được tạo thành công. Email xác nhận đã được gửi về email mà bạn đăng ký.',
       success: true,
       data: []
     });
   } catch (error) {
-    next(error);
+    await transporter.sendMail(mailConfig(email,"phamminhquan12c1@gmail.com", "ĐẶT PHÒNG THẤT BẠI, TẠI Q&N HOTEL", "ĐẶT PHÒNG KHÔNG THÀNH CÔNG, CHÚNG TÔI SẼ HOÀN TIỀN LẠI CHO BẠN TRONG ÍT PHÚT."))
+
+    return res.status(201).json({
+      status: 201,
+      message: 'Đặt phòng không thành công, chúng tôi sẽ hoàn tiền cho bạn trước 7 ngày. Cám ơn bạn đã tin tưởng và sử dụng dịch vụ của chúng tôi.',
+      success: true,
+      data: []
+    });
   }
 };
 
@@ -157,6 +207,88 @@ export const getAllBooking = async (req, res, next) => {
       message: 'Lấy danh sách đặt phòng thành công.',
       success: true,
       data: bookings,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const updateBooking = async (req, res, next) => {
+  const { bookingId } = req.params;
+  const {
+    room,
+    employeeId,
+    name,
+    email,
+    phone,
+    additionalServices,
+    checkInDate,
+    checkOutDate,
+    status,
+    stage
+  } = req.body;
+
+  try {
+    // Kiểm tra xem đơn đặt phòng tồn tại hay không
+    const existingBooking = await Booking.findById(bookingId);
+    if (!existingBooking) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Đơn đặt phòng không tồn tại.',
+        success: false,
+      });
+    }
+
+    // Kiểm tra xem phòng được chọn có tồn tại và có trạng thái "published" không
+    const existingRoom = await Room.findOne({
+      _id: room,
+      status: 'published',
+    });
+    if (!existingRoom) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Phòng không tồn tại hoặc không được công bố.',
+        success: false,
+      });
+    }
+
+    // Cập nhật thông tin đơn đặt phòng
+    existingBooking.status = status;
+    existingBooking.stage = stage;
+    existingBooking.employee = employeeId;
+    existingBooking.name = name;
+    existingBooking.email = email;
+    existingBooking.phone = phone;
+    existingBooking.additionalServices = additionalServices;
+    existingBooking.checkInDate = checkInDate;
+    existingBooking.checkOutDate = checkOutDate;
+
+    await existingBooking.save();
+
+    // Cập nhật trạng thái phòng
+    const existingStatusRoom = await StatusRoom.findOne({ room, startDate: checkInDate, endDate: checkOutDate });
+    if (existingStatusRoom) {
+      
+      if ( stage == "cancelled") {
+        existingStatusRoom.status = "cancelled";
+      }
+
+      if ( stage == "checkedOut") {
+        existingStatusRoom.status = "done";
+
+      }
+
+      existingStatusRoom.description = 'Cập nhật từ đặt phòng';
+      existingStatusRoom.employee = employeeId;
+      await existingStatusRoom.save();
+    }
+
+    return res.status(200).json({
+      status: 200,
+      message: 'Đơn đặt phòng đã được cập nhật thành công.',
+      success: true,
+      data: existingBooking,
     });
   } catch (error) {
     next(error);
